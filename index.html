@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)file:///C:/Users/Andy/Downloads/index_lotopool_mejores10.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lotopool Núcleo Activo AutoTrainer</title>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Arial,sans-serif;
+      background:#070b16;
+      color:#e5e7eb;
+      display:flex;
+      justify-content:center;
+      padding:18px;
+    }
+    .app{
+      width:100%;
+      max-width:980px;
+      background:#0f172a;
+      border:1px solid #1f2a44;
+      border-radius:24px;
+      padding:22px;
+      box-shadow:0 12px 40px rgba(0,0,0,.35);
+    }
+    h1,h2,h3{margin:0 0 10px;color:#93c5fd}
+    p{color:#cbd5e1;line-height:1.45}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+      gap:14px;
+      margin:18px 0;
+    }
+    
+.hero-hibrido{
+  grid-column:1/-1;
+}
+
+    .card{
+      background:#111c31;
+      border:1px solid #334155;
+      border-radius:18px;
+      padding:16px;
+    }
+    textarea,input,select{
+      width:100%;
+      padding:13px;
+      border-radius:14px;
+      border:1px solid #334155;
+      background:#0b1220;
+      color:#e5e7eb;
+      font-family:monospace;
+      font-size:15px;
+      outline:none;
+    }
+    textarea{min-height:92px;resize:vertical}
+    textarea::placeholder,input::placeholder{color:#64748b}
+    button{
+      width:100%;
+      border:0;
+      border-radius:14px;
+      padding:14px;
+      color:white;
+      font-size:15px;
+      font-weight:bold;
+      cursor:pointer;
+      margin-top:10px;
+    }
+    button:hover{filter:brightness(.94)}
+    .btn-blue{background:#1a56db}
+    .btn-green{background:#0e9f6e}
+    .btn-purple{background:#7c3aed}
+    .btn-orange{background:#f59e0b}
+    .btn-red{background:#dc2626}
+    .btn-dark{background:#111827;border:1px solid #475569}
+    .output{
+      margin-top:16px;
+      background:#0b1220;
+      border:1px solid #334155;
+      border-radius:18px;
+      padding:14px;
+      min-height:70px;
+    }
+    .ticket{
+      background:#111c31;
+      border:1px solid #334155;
+      border-radius:15px;
+      padding:12px;
+      margin:10px 0;
+    }
+    .ticket-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .balls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+    .ball{
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#dbeafe;
+      color:#0f172a;
+      font-family:monospace;
+      font-weight:bold;
+      border:1px solid #93c5fd;
+    }
+    .small{font-size:13px;color:#94a3b8}
+    .warn{
+      background:#291f0b;
+      border:1px solid #92400e;
+      color:#fde68a;
+      border-radius:14px;
+      padding:10px;
+      margin:12px 0;
+      font-size:13px;
+    }
+    .top-actions{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:10px;
+    }
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+      gap:10px;
+      margin:12px 0;
+    }
+    .stat{
+      background:#0b1220;
+      border:1px solid #334155;
+      border-radius:14px;
+      padding:12px;
+      text-align:center;
+    }
+    .stat span{display:block;color:#94a3b8;font-size:12px}
+    .stat strong{display:block;color:#bfdbfe;font-size:20px;margin-top:4px}
+    .progress{
+      width:100%;
+      height:12px;
+      border-radius:999px;
+      background:#111827;
+      border:1px solid #334155;
+      overflow:hidden;
+      margin:12px 0;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background:#1a56db;
+      transition:width .12s linear;
+    }
+    table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+    th,td{padding:8px;border-bottom:1px solid #334155;text-align:center}
+    th{background:#1e293b;color:#bfdbfe}
+    .good{color:#86efac;font-weight:bold}
+    .bad{color:#fca5a5;font-weight:bold}
+    .mid{color:#fde68a;font-weight:bold}
+  
+.theme-toggle{
+  position:fixed;
+  top:14px;
+  right:14px;
+  z-index:9999;
+  width:auto;
+  padding:10px 14px;
+  border-radius:999px;
+  background:#f8fafc;
+  color:#0f172a;
+  border:1px solid #cbd5e1;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
+}
+
+/* Modo claro */
+body.light-mode{
+  background:#f3f6fb;
+  color:#111827;
+}
+body.light-mode .app{
+  background:#ffffff;
+  color:#111827;
+  border-color:#e5e7eb;
+}
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3{
+  color:#1a56db;
+}
+body.light-mode p,
+body.light-mode .small{
+  color:#4b5563;
+}
+body.light-mode .card,
+body.light-mode .ticket,
+body.light-mode .output,
+body.light-mode .stat{
+  background:#f8fafc;
+  border-color:#dbe3ef;
+  color:#111827;
+}
+body.light-mode textarea,
+body.light-mode input,
+body.light-mode select{
+  background:#ffffff;
+  color:#111827;
+  border-color:#d1d5db;
+}
+body.light-mode textarea::placeholder,
+body.light-mode input::placeholder{
+  color:#6b7280;
+}
+body.light-mode .warn{
+  background:#fff7ed;
+  border-color:#fed7aa;
+  color:#9a3412;
+}
+body.light-mode .ball{
+  background:#e8effe;
+  color:#1040b0;
+  border-color:#bfdbfe;
+}
+body.light-mode th{
+  background:#f1f5f9;
+  color:#111827;
+}
+body.light-mode td{
+  border-bottom-color:#e5e7eb;
+  color:#111827;
+}
+body.light-mode .theme-toggle{
+  background:#0f172a;
+  color:#ffffff;
+  border-color:#334155;
+}
+
+  </style>
+</head>
+<body>
+<button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">☀️ Modo claro</button>
+  <main class="app">
+    <h1>🧬 Lotopool — Núcleo Activo AutoTrainer</h1>
+    <p>Sistema limpio adaptado a <strong>5 números del 1 al 31</strong>. Entrena miles de combinaciones, detecta números fuertes, guarda base local y genera <strong>100 tickets finales</strong> y aprende solo con resultados reales.</p>
+
+    <div class="warn">
+      Núcleo maestro activo: <strong>16-17-22-24-27</strong><br>
+      Formatos aceptados para último sorteo o base: <strong>01-07-12-18-29</strong>, <strong>01 07 12 18 29</strong> o <strong>1-7-12-18-29</strong>.
+    </div>
+
+    <div class="grid">
+
+<section class="card hero-hibrido">
+  <h2>📚 Generador Lotopool 5/31 — Base múltiple</h2>
+  <p class="small">Pega uno o muchos sorteos reales, uno por línea. El sistema genera 100 tickets usando todos esos sorteos + el núcleo maestro 16-17-22-24-27 + aprendizaje guardado.</p>
+  <textarea id="ultimoSorteo" placeholder="07 10 14 23 28
+03 11 16 21 31
+05 09 17 24 27"></textarea>
+  <button class="btn-blue" onclick="generar100TicketsLotopool()">Generar 100 Tickets con Base Pegada</button>
+</section>
+
+      <section class="card">
+        <h2>🎯 Leer resultado real</h2>
+        <p class="small">Después de generar tickets, pega el sorteo que salió. El sistema medirá aciertos y aprenderá localmente.</p>
+        <textarea id="resultadoReal" placeholder="01-07-12-18-29"></textarea>
+        <button class="btn-green" onclick="leerResultadoYAprender()">Leer resultado y aprender</button>
+      </section>
+
+      <section class="card">
+        <h2>🧠 Entrenamiento con resultados reales</h2>
+        <p class="small">Usa solamente los sorteos reales guardados en la base local. No genera entrenamiento aleatorio.</p>
+        <button class="btn-orange" onclick="entrenarConResultadosReales()">Entrenar con resultados reales</button>
+      </section>
+
+      <section class="card">
+        <h2>💾 Base local</h2>
+        <p class="small">Pega sorteos reales, uno por línea. Cada línea debe tener 5 números del 1 al 31.</p>
+        <textarea id="baseInput" placeholder="01-07-12-18-29
+03-11-16-21-31"></textarea>
+        <button class="btn-green" onclick="guardarBaseLocal()">Guardar sorteos en base local</button>
+      </section>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn-green" onclick="copiarTickets()">📋 Copiar tickets</button>
+      <button class="btn-purple" onclick="verMejores10Tickets()">🏆 Ver mejores 10 tickets</button>
+      <button class="btn-dark" onclick="verBaseLocal()">📊 Ver base local</button>
+      <button class="btn-red" onclick="borrarBaseLocal()">🗑️ Borrar base local</button>
+      <button class="btn-red" onclick="borrarAprendizaje()">🧠 Borrar aprendizaje</button>
+      <button class="btn-red" onclick="borrarMejoresTickets()">🏆 Borrar ranking 3+</button>
+      <button class="btn-dark" onclick="limpiarTodo()">🧹 Limpiar pantalla</button>
+    </div>
+
+    <section class="output" id="output">
+      <span class="small">Los resultados aparecerán aquí.</span>
+    </section>
+  </main>
+
+<script>
+const MIN_NUM = 1;
+const MAX_NUM = 31;
+const CANTIDAD_NUMEROS = 5;
+const CANTIDAD_TICKETS = 100;
+const NUCLEO_MAESTRO = [16,17,22,24,27];
+const KEY_BASE = "lotopoolBaseLocal";
+const KEY_TICKETS = "lotopoolTicketsGenerados";
+const KEY_NUCLEO = "lotopoolNucleoDetectado";
+const KEY_APRENDIZAJE = "lotopoolAprendizaje";
+const KEY_MEJORES_TICKETS = "lotopoolMejoresTickets3Plus";
+
+let ticketsGenerados = JSON.parse(localStorage.getItem(KEY_TICKETS) || "[]");
+let nucleoDetectado = JSON.parse(localStorage.getItem(KEY_NUCLEO) || JSON.stringify(NUCLEO_MAESTRO));
+
+function fmt(n){ return n < 10 ? "0" + n : "" + n; }
+
+function obtenerBaseLocal(){
+  return JSON.parse(localStorage.getItem(KEY_BASE) || "[]");
+}
+
+function guardarBase(base){
+  localStorage.setItem(KEY_BASE, JSON.stringify(base));
+}
+
+function obtenerAprendizaje(){
+  const inicial = {numeros:{}, pares:{}, historial:[]};
+  const data = JSON.parse(localStorage.getItem(KEY_APRENDIZAJE) || JSON.stringify(inicial));
+  if(!data.numeros) data.numeros = {};
+  if(!data.pares) data.pares = {};
+  if(!data.historial) data.historial = [];
+  for(let n=MIN_NUM;n<=MAX_NUM;n++){
+    if(typeof data.numeros[n] !== "number") data.numeros[n] = 0;
+  }
+  return data;
+}
+
+function guardarAprendizaje(data){
+  localStorage.setItem(KEY_APRENDIZAJE, JSON.stringify(data));
+}
+
+
+function obtenerMejoresTickets(){
+  return JSON.parse(localStorage.getItem(KEY_MEJORES_TICKETS) || "[]");
+}
+
+function guardarMejoresTickets(lista){
+  localStorage.setItem(KEY_MEJORES_TICKETS, JSON.stringify(lista));
+}
+
+function actualizarMejoresTickets(ticket, resultado, hits){
+  if(hits < 3) return;
+
+  const lista = obtenerMejoresTickets();
+  const clave = ticket.join("-");
+  let item = lista.find(x => x.clave === clave);
+
+  const recompensa = hits === 5 ? 100 : hits === 4 ? 45 : 18;
+
+  if(!item){
+    item = {
+      clave,
+      ticket:[...ticket],
+      vecesBueno:0,
+      veces3:0,
+      veces4:0,
+      veces5:0,
+      mejorHit:0,
+      score:0,
+      ultimoResultado:null,
+      ultimaFecha:null
+    };
+    lista.push(item);
+  }
+
+  item.vecesBueno += 1;
+  if(hits === 3) item.veces3 += 1;
+  if(hits === 4) item.veces4 += 1;
+  if(hits === 5) item.veces5 += 1;
+  item.mejorHit = Math.max(item.mejorHit || 0, hits);
+  item.score = Number(((item.score || 0) + recompensa).toFixed(2));
+  item.ultimoResultado = [...resultado];
+  item.ultimaFecha = new Date().toLocaleString();
+
+  lista.sort((a,b)=>
+    (b.score || 0) - (a.score || 0) ||
+    (b.mejorHit || 0) - (a.mejorHit || 0) ||
+    (b.vecesBueno || 0) - (a.vecesBueno || 0)
+  );
+
+  guardarMejoresTickets(lista.slice(0, 300));
+}
+
+function verMejores10Tickets(){
+  const lista = obtenerMejoresTickets().slice(0,10);
+
+  if(!lista.length){
+    document.getElementById("output").innerHTML = `
+      <h2>🏆 Mejores 10 tickets</h2>
+      <p class="small">Todavía no hay tickets con 3+ aciertos guardados. Genera tickets, lee resultados reales y el sistema los irá acumulando aquí.</p>
+    `;
+    return;
+  }
+
+  let html = `
+    <h2>🏆 Mejores 10 tickets 3+</h2>
+    <p class="small">Ranking basado en prueba y error: 3/5 suma, 4/5 suma más y 5/5 queda como élite.</p>
+    <div class="stats">
+      <div class="stat"><span>Tickets buenos guardados</span><strong>${obtenerMejoresTickets().length}</strong></div>
+      <div class="stat"><span>Mostrando</span><strong>${lista.length}</strong></div>
+      <div class="stat"><span>Regla</span><strong>3+</strong></div>
+    </div>
+    <button class="btn-green" onclick="copiarMejores10Tickets()">📋 Copiar mejores 10</button>
+  `;
+
+  lista.forEach((item,idx)=>{
+    html += `
+      <div class="ticket">
+        <div class="ticket-head">
+          <strong>#${idx+1} — Score ${item.score}</strong>
+          <span class="small">Mejor: ${item.mejorHit}/5 • Buenos: ${item.vecesBueno} • 3/5: ${item.veces3} • 4/5: ${item.veces4} • 5/5: ${item.veces5}</span>
+        </div>
+        <div class="balls">${item.ticket.map(n=>`<div class="ball">${fmt(n)}</div>`).join("")}</div>
+        <p class="small">Última lectura: ${item.ultimaFecha || "-"}${item.ultimoResultado ? " • Resultado: " + item.ultimoResultado.map(fmt).join("-") : ""}</p>
+      </div>
+    `;
+  });
+
+  document.getElementById("output").innerHTML = html;
+}
+
+function copiarMejores10Tickets(){
+  const lista = obtenerMejoresTickets().slice(0,10);
+  if(!lista.length){
+    alert("Todavía no hay mejores tickets guardados.");
+    return;
+  }
+
+  const texto = lista.map((item,i)=>`Top #${i+1}: ${item.ticket.map(fmt).join("-")} | Score ${item.score} | Mejor ${item.mejorHit}/5`).join("\n");
+  navigator.clipboard.writeText(texto).then(()=>{
+    alert("Mejores 10 tickets copiados.");
+  }).catch(()=>{
+    alert("No se pudo copiar automáticamente.");
+  });
+}
+
+function borrarMejoresTickets(){
+  if(!confirm("¿Seguro que deseas borrar el ranking de mejores tickets 3+?")) return;
+  localStorage.removeItem(KEY_MEJORES_TICKETS);
+  document.getElementById("output").innerHTML = `<h2>🏆 Ranking borrado</h2><p class="small">Se eliminaron los tickets buenos acumulados.</p>`;
+}
+
+function clavePar(a,b){
+  return [a,b].sort((x,y)=>x-y).join("-");
+}
+
+function limpiarEntrada(texto){
+  return [...new Set(
+    texto
+      .replace(/[^\d]+/g, " ")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(Number)
+      .filter(n => n >= MIN_NUM && n <= MAX_NUM)
+  )].sort((a,b)=>a-b);
+}
+
+function limpiarSorteosMultiples(texto){
+  const lineas = texto
+    .split(/\n+/)
+    .map(l => l.trim())
+    .filter(Boolean);
+
+  const validos = [];
+  const invalidos = [];
+  const vistos = new Set();
+
+  lineas.forEach((linea, idx)=>{
+    const nums = limpiarEntrada(linea);
+    if(nums.length !== CANTIDAD_NUMEROS){
+      invalidos.push({linea: idx + 1, texto: linea});
+      return;
+    }
+
+    const clave = nums.join("-");
+    if(!vistos.has(clave)){
+      vistos.add(clave);
+      validos.push(nums);
+    }
+  });
+
+  return {validos, invalidos};
+}
+
+function validarSorteo5(nums){
+  return nums.length === CANTIDAD_NUMEROS;
+}
+
+function azarEntre1y31(){
+  return Math.floor(Math.random() * MAX_NUM) + MIN_NUM;
+}
+
+function generarCombinacionAzar(){
+  const nums = [];
+  while(nums.length < CANTIDAD_NUMEROS){
+    const n = azarEntre1y31();
+    if(!nums.includes(n)) nums.push(n);
+  }
+  return nums.sort((a,b)=>a-b);
+}
+
+function completarTicket(base){
+  const ticket = [...new Set(base.filter(n => n >= MIN_NUM && n <= MAX_NUM))];
+
+  while(ticket.length < CANTIDAD_NUMEROS){
+    const n = azarEntre1y31();
+    if(!ticket.includes(n)) ticket.push(n);
+  }
+
+  return ticket.slice(0, CANTIDAD_NUMEROS).sort((a,b)=>a-b);
+}
+
+function derivados(n){
+  return [n, n-1, n+1, 32-n].filter(x => x >= MIN_NUM && x <= MAX_NUM);
+}
+
+function crearTicketDesdePool(pool){
+  const mezclado = [...new Set(pool.filter(n => n >= MIN_NUM && n <= MAX_NUM))]
+    .sort(() => Math.random() - 0.5);
+
+  return completarTicket(mezclado.slice(0, CANTIDAD_NUMEROS));
+}
+
+function contarAciertos(ticket, sorteo){
+  return ticket.filter(n => sorteo.includes(n)).length;
+}
+
+function analizarPool(combinaciones){
+  const frecuencia = {};
+  const pares = {};
+  const aprendizaje = obtenerAprendizaje();
+
+  for(let n=MIN_NUM;n<=MAX_NUM;n++) frecuencia[n]=0;
+
+  combinaciones.forEach(combo=>{
+    combo.forEach(n=>frecuencia[n]++);
+    for(let i=0;i<combo.length;i++){
+      for(let j=i+1;j<combo.length;j++){
+        const par = clavePar(combo[i], combo[j]);
+        pares[par] = (pares[par] || 0) + 1;
+      }
+    }
+  });
+
+  const rankingNumeros = Object.entries(frecuencia)
+    .map(([num,veces])=>{
+      const n = Number(num);
+      const peso = aprendizaje.numeros[n] || 0;
+      return {num:n, veces, peso, score:veces + peso};
+    })
+    .sort((a,b)=>b.score-a.score || b.veces-a.veces || a.num-b.num);
+
+  const rankingPares = Object.entries(pares)
+    .map(([par,veces])=>{
+      const peso = aprendizaje.pares[par] || 0;
+      return {par, veces, peso, score:veces + peso};
+    })
+    .sort((a,b)=>b.score-a.score || b.veces-a.veces);
+
+  return {rankingNumeros, rankingPares};
+}
+
+function generarTicketsInteligentes(rankingNumeros, rankingPares, semillaExtra=[]){
+  const topNumeros = rankingNumeros.slice(0,16).map(x=>x.num);
+  const topPares = rankingPares.slice(0,18).flatMap(x=>x.par.split("-").map(Number));
+  const pool = [...new Set([...topNumeros, ...topPares, ...semillaExtra, ...semillaExtra.flatMap(derivados)])];
+
+  const tickets = [];
+  const usados = new Set();
+
+  let intentos = 0;
+  while(tickets.length < CANTIDAD_TICKETS && intentos < 2000){
+    intentos++;
+    const base = [...pool].sort(() => Math.random() - 0.5).slice(0, CANTIDAD_NUMEROS);
+    const ticket = completarTicket(base);
+    const clave = ticket.join("-");
+    if(usados.has(clave)) continue;
+
+    // Evita tickets demasiado parecidos
+    const muyParecido = tickets.some(t => contarAciertos(t, ticket) >= 4);
+    if(muyParecido && intentos < 1000) continue;
+
+    usados.add(clave);
+    tickets.push(ticket);
+  }
+
+  while(tickets.length < CANTIDAD_TICKETS){
+    const ticket = generarCombinacionAzar();
+    const clave = ticket.join("-");
+    if(!usados.has(clave)){
+      usados.add(clave);
+      tickets.push(ticket);
+    }
+  }
+
+  return tickets;
+}
+
+function guardarTickets(tickets){
+  ticketsGenerados = tickets;
+  localStorage.setItem(KEY_TICKETS, JSON.stringify(tickets));
+}
+
+function generarNucleoActivo(){
+  const baseLocal = obtenerBaseLocal();
+  const combinaciones = baseLocal.length ? baseLocal : Array.from({length:1000}, generarCombinacionAzar);
+  const analisis = analizarPool(combinaciones);
+  nucleoDetectado = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
+  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+
+  const pool = [...nucleoDetectado, ...nucleoDetectado.flatMap(derivados)];
+  const tickets = [];
+  for(let i=0;i<CANTIDAD_TICKETS;i++) tickets.push(crearTicketDesdePool(pool));
+
+  guardarTickets(tickets);
+  renderTickets("🔥 Núcleo Activo", tickets, analisis);
+}
+
+function generarNucleoMasSorteo(){
+  const nums = limpiarEntrada(document.getElementById("ultimoSorteo").value);
+  if(!validarSorteo5(nums)){
+    alert("Debes poner exactamente 5 números válidos del 1 al 31.");
+    return;
+  }
+
+  const baseLocal = obtenerBaseLocal();
+  const combinaciones = baseLocal.length ? [...baseLocal, nums] : [nums, ...Array.from({length:1000}, generarCombinacionAzar)];
+  const analisis = analizarPool(combinaciones);
+  nucleoDetectado = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
+  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+
+  const tickets = generarTicketsInteligentes(analisis.rankingNumeros, analisis.rankingPares, nums);
+  guardarTickets(tickets);
+  renderTickets("⚡ Núcleo Activo + Último Sorteo", tickets, analisis, nums);
+}
+
+
+function generarTicketsNucleoActivoInterno(cantidad=5){
+  const baseLocal = obtenerBaseLocal();
+  const combinaciones = baseLocal.length ? baseLocal : Array.from({length:1000}, generarCombinacionAzar);
+  const analisis = analizarPool(combinaciones);
+  const nucleo = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
+  const pool = [...nucleo, ...nucleo.flatMap(derivados)];
+
+  const tickets = [];
+  const usados = new Set();
+  let intentos = 0;
+
+  while(tickets.length < cantidad && intentos < 1500){
+    intentos++;
+    const t = crearTicketDesdePool(pool);
+    const clave = t.join("-");
+    if(!usados.has(clave)){
+      usados.add(clave);
+      tickets.push(t);
+    }
+  }
+
+  while(tickets.length < cantidad){
+    const t = generarCombinacionAzar();
+    const clave = t.join("-");
+    if(!usados.has(clave)){
+      usados.add(clave);
+      tickets.push(t);
+    }
+  }
+
+  return {tickets, analisis, nucleo};
+}
+
+function generarTicketsNucleoMasSorteoInterno(nums, cantidad=5){
+  const baseLocal = obtenerBaseLocal();
+  const combinaciones = baseLocal.length ? [...baseLocal, nums] : [nums, ...Array.from({length:1000}, generarCombinacionAzar)];
+  const analisis = analizarPool(combinaciones);
+  const tickets = generarTicketsInteligentes(analisis.rankingNumeros, analisis.rankingPares, nums).slice(0, cantidad);
+  const nucleo = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
+
+  return {tickets, analisis, nucleo};
+}
+
+function generar100TicketsLotopool(){
+  const input = document.getElementById("ultimoSorteo");
+  const texto = input ? input.value.trim() : "";
+  const {validos:sorteosPegados, invalidos} = limpiarSorteosMultiples(texto);
+
+  if(invalidos.length){
+    alert(`Hay ${invalidos.length} línea(s) inválida(s). Cada sorteo debe tener exactamente 5 números válidos del 1 al 31.`);
+    return;
+  }
+
+  const baseLocal = obtenerBaseLocal();
+
+  // Si no hay base pegada ni base local, usa el núcleo maestro como semilla principal.
+  const combinaciones = [
+    ...baseLocal,
+    ...sorteosPegados,
+    NUCLEO_MAESTRO
+  ];
+
+  const analisis = analizarPool(combinaciones);
+  nucleoDetectado = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
+  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+
+  const semilla = [
+    ...NUCLEO_MAESTRO,
+    ...nucleoDetectado,
+    ...sorteosPegados.flat(),
+    ...baseLocal.slice(-10).flat()
+  ];
+
+  const tickets = generarTicketsInteligentes(analisis.rankingNumeros, analisis.rankingPares, semilla).slice(0, CANTIDAD_TICKETS);
+
+  // Garantiza que el primer ticket sea el núcleo maestro puro.
+  tickets[0] = [...NUCLEO_MAESTRO].sort((a,b)=>a-b);
+
+  guardarTickets(tickets);
+  renderTickets("🎯 Lotopool — 100 Tickets con Base Múltiple", tickets, analisis, null);
+
+  const resumen = `
+    <div class="warn">
+      Base usada para generar: <strong>${sorteosPegados.length}</strong> sorteo(s) pegado(s) +
+      <strong>${baseLocal.length}</strong> sorteo(s) guardado(s) + núcleo maestro.
+      <br>Los sorteos pegados aquí se usan para generar, pero no se guardan permanente hasta que los pongas en Base local.
+    </div>
+  `;
+  document.getElementById("output").innerHTML = document.getElementById("output").innerHTML.replace('</h2>', '</h2>' + resumen);
+}
+
+function generarMotorHibridoElite(){
+  const input = document.getElementById("ultimoSorteo");
+  const nums = limpiarEntrada(input ? input.value : "");
+
+  if(!validarSorteo5(nums)){
+    alert("Debes poner exactamente 5 números válidos del 1 al 31. Ejemplo: 05-15-21-23-29");
+    return;
+  }
+
+  const parteA = generarTicketsNucleoActivoInterno(50);
+  const parteB = generarTicketsNucleoMasSorteoInterno(nums, 50);
+
+  const tickets = [...parteA.tickets, ...parteB.tickets].slice(0, CANTIDAD_TICKETS);
+  guardarTickets(tickets);
+
+  const combinacionesFusion = [
+    ...(obtenerBaseLocal().length ? obtenerBaseLocal() : []),
+    nums,
+    ...parteA.tickets,
+    ...parteB.tickets
+  ];
+
+  const analisisFinal = analizarPool(combinacionesFusion);
+
+  nucleoDetectado = analisisFinal.rankingNumeros.slice(0,8).map(x=>x.num);
+  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+
+  renderMotorHibrido(tickets, parteA, parteB, analisisFinal, nums);
+}
+
+function renderMotorHibrido(tickets, parteA, parteB, analisisFinal, sorteo){
+  let html = `
+    <h2>🧬 Motor Híbrido Elite — Lotopool</h2>
+    <p class="small">Fusionado: <strong>100 tickets finales</strong> usando núcleo maestro + último sorteo.</p>
+    <p class="small">Último sorteo usado: <strong>${sorteo.map(fmt).join("-")}</strong></p>
+
+    <div class="stats">
+      <div class="stat"><span>Rango</span><strong>1-31</strong></div>
+      <div class="stat"><span>Números por ticket</span><strong>5</strong></div>
+      <div class="stat"><span>Tickets finales</span><strong>100</strong></div>
+      <div class="stat"><span>Base local</span><strong>${obtenerBaseLocal().length}</strong></div>
+    </div>
+
+    ${renderAnalisis(analisisFinal)}
+
+    <h3>🔥 50 tickets — Núcleo Activo</h3>
+  `;
+
+  parteA.tickets.forEach((ticket,idx)=>{
+    html += `
+      <div class="ticket">
+        <div class="ticket-head">
+          <strong>Núcleo Activo #${idx+1}</strong>
+          <span class="small">${ticket.map(fmt).join("-")}</span>
+        </div>
+        <div class="balls">${ticket.map(n=>`<div class="ball">${fmt(n)}</div>`).join("")}</div>
+      </div>
+    `;
+  });
+
+  html += `<h3>⚡ 50 tickets — Núcleo + Último Sorteo</h3>`;
+
+  parteB.tickets.forEach((ticket,idx)=>{
+    html += `
+      <div class="ticket">
+        <div class="ticket-head">
+          <strong>Núcleo + Sorteo #${idx+1}</strong>
+          <span class="small">${ticket.map(fmt).join("-")}</span>
+        </div>
+        <div class="balls">${ticket.map(n=>`<div class="ball">${fmt(n)}</div>`).join("")}</div>
+      </div>
+    `;
+  });
+
+  document.getElementById("output").innerHTML = html;
+}
+
+
+function entrenarConResultadosReales(){
+  const baseLocal = obtenerBaseLocal();
+
+  if(!baseLocal.length){
+    alert("Primero guarda resultados reales en la base local.");
+    return;
+  }
+
+  const combinaciones = [...baseLocal, NUCLEO_MAESTRO];
+  const analisis = analizarPool(combinaciones);
+
+  nucleoDetectado = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
+  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+
+  const semillaReal = [
+    ...NUCLEO_MAESTRO,
+    ...nucleoDetectado,
+    ...baseLocal.slice(-5).flat()
+  ];
+
+  const tickets = generarTicketsInteligentes(analisis.rankingNumeros, analisis.rankingPares, semillaReal).slice(0, CANTIDAD_TICKETS);
+  tickets[0] = [...NUCLEO_MAESTRO].sort((a,b)=>a-b);
+
+  guardarTickets(tickets);
+  renderTickets("🧠 Entrenamiento real — 100 Tickets Finales", tickets, analisis, null, 0, baseLocal.length);
+}
+
+
+function calcularRecompensaPorAciertos(hits){
+  if(hits === 5) return 30; // Perfecto
+  if(hits === 4) return 18; // Muy fuerte
+  if(hits === 3) return 10; // Bueno
+  if(hits === 2) return 2;  // Normal / leve positivo
+  return -3;                // 0 o 1 = débil
+}
+
+function etiquetaCalidadPorAciertos(hits){
+  if(hits === 5) return "🏆 Perfecto";
+  if(hits === 4) return "🔥 Muy fuerte";
+  if(hits === 3) return "✅ Bueno";
+  if(hits === 2) return "⚪ Normal";
+  if(hits === 1) return "⚠️ Débil";
+  return "❌ Malo";
+}
+
+function leerResultadoYAprender(){
+  const resultado = limpiarEntrada(document.getElementById("resultadoReal").value);
+
+  if(!validarSorteo5(resultado)){
+    alert("Debes poner exactamente 5 números válidos del 1 al 31.");
+    return;
+  }
+
+  if(!ticketsGenerados.length){
+    alert("Primero genera tickets para que el sistema pueda compararlos.");
+    return;
+  }
+
+  const aprendizaje = obtenerAprendizaje();
+  const base = obtenerBaseLocal();
+  const existentes = new Set(base.map(s=>s.join("-")));
+  const claveResultado = resultado.join("-");
+
+  if(!existentes.has(claveResultado)){
+    base.push(resultado);
+    guardarBase(base);
+  }
+
+  let mejorHit = 0;
+  let mejorTicket = null;
+  let totalHits = 0;
+  let ticketsBuenos = 0;
+  let ticketsMuyFuertes = 0;
+  let ticketsPerfectos = 0;
+
+  ticketsGenerados.forEach(ticket=>{
+    const hits = contarAciertos(ticket, resultado);
+    const recompensa = calcularRecompensaPorAciertos(hits);
+
+    totalHits += hits;
+    if(hits >= 3) ticketsBuenos++;
+    if(hits >= 4) ticketsMuyFuertes++;
+    if(hits === 5) ticketsPerfectos++;
+
+    actualizarMejoresTickets(ticket, resultado, hits);
+
+    if(hits > mejorHit){
+      mejorHit = hits;
+      mejorTicket = ticket;
+    }
+
+    // Regla clave: 3+ aciertos = bueno, 4 = fuerte, 5 = perfecto.
+    ticket.forEach(n=>{
+      const acerto = resultado.includes(n);
+      if(acerto){
+        aprendizaje.numeros[n] = (aprendizaje.numeros[n] || 0) + recompensa;
+      }else{
+        aprendizaje.numeros[n] = (aprendizaje.numeros[n] || 0) + (hits >= 3 ? -0.25 : -1.5);
+      }
+    });
+
+    for(let i=0;i<ticket.length;i++){
+      for(let j=i+1;j<ticket.length;j++){
+        const par = clavePar(ticket[i], ticket[j]);
+        const parAcerto = resultado.includes(ticket[i]) && resultado.includes(ticket[j]);
+
+        if(parAcerto){
+          aprendizaje.pares[par] = (aprendizaje.pares[par] || 0) + (hits >= 3 ? recompensa : 3);
+        }else{
+          aprendizaje.pares[par] = (aprendizaje.pares[par] || 0) + (hits >= 3 ? -0.15 : -0.75);
+        }
+      }
+    }
+  });
+
+  // Refuerzo adicional al resultado real completo
+  resultado.forEach(n=>{
+    aprendizaje.numeros[n] = (aprendizaje.numeros[n] || 0) + 10;
+  });
+
+  for(let i=0;i<resultado.length;i++){
+    for(let j=i+1;j<resultado.length;j++){
+      const par = clavePar(resultado[i], resultado[j]);
+      aprendizaje.pares[par] = (aprendizaje.pares[par] || 0) + 12;
+    }
+  }
+
+  aprendizaje.historial.push({
+    fecha:new Date().toLocaleString(),
+    resultado,
+    mejorHit,
+    mejorTicket,
+    calidad: etiquetaCalidadPorAciertos(mejorHit),
+    ticketsBuenos,
+    ticketsMuyFuertes,
+    ticketsPerfectos,
+    promedio:Number((totalHits / ticketsGenerados.length).toFixed(2))
+  });
+
+  if(aprendizaje.historial.length > 200){
+    aprendizaje.historial = aprendizaje.historial.slice(-200);
+  }
+
+  guardarAprendizaje(aprendizaje);
+
+  const analisis = analizarPool(obtenerBaseLocal().length ? obtenerBaseLocal() : [resultado]);
+  nucleoDetectado = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
+  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+
+  let html = `
+    <h2>🎯 Resultado leído y aprendizaje aplicado</h2>
+    <p class="small">Resultado real: <strong>${resultado.map(fmt).join("-")}</strong></p>
+    <div class="stats">
+      <div class="stat"><span>Mejor acierto</span><strong>${mejorHit}/5</strong></div>
+      <div class="stat"><span>Calidad</span><strong>${etiquetaCalidadPorAciertos(mejorHit)}</strong></div>
+      <div class="stat"><span>Tickets buenos 3+</span><strong>${ticketsBuenos}</strong></div>
+      <div class="stat"><span>Promedio tickets</span><strong>${(totalHits / ticketsGenerados.length).toFixed(2)}</strong></div>
+      <div class="stat"><span>Base local</span><strong>${obtenerBaseLocal().length}</strong></div>
+      <div class="stat"><span>Lecturas guardadas</span><strong>${aprendizaje.historial.length}</strong></div>
+      <div class="stat"><span>Ranking 3+</span><strong>${obtenerMejoresTickets().length}</strong></div>
+    </div>
+  `;
+
+  if(mejorTicket){
+    html += `
+      <div class="ticket">
+        <strong>Mejor ticket anterior</strong>
+        <div class="balls">
+          ${mejorTicket.map(n=>`<div class="ball">${fmt(n)}</div>`).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  const ticketsMejorados = generarTicketsInteligentes(analisis.rankingNumeros, analisis.rankingPares, [...NUCLEO_MAESTRO, ...resultado]).slice(0, CANTIDAD_TICKETS);
+  guardarTickets(ticketsMejorados);
+
+  html += `
+    <div class="warn">
+      Regla activada: 3 aciertos o más = bueno. El sistema premia 3/5, refuerza más 4/5, refuerza máximo 5/5 y castiga 0-1 aciertos. Ya generó una nueva tanda mejorada de 100 tickets.
+    </div>
+    ${renderAnalisis(analisis)}
+    <button class="btn-purple" onclick="verMejores10Tickets()">🏆 Ver mejores 10 tickets</button>
+    <h3>🧠 Próximos 100 tickets aprendidos</h3>
+  `;
+
+  ticketsMejorados.forEach((ticket,idx)=>{
+    html += `
+      <div class="ticket">
+        <div class="ticket-head">
+          <strong>Aprendido #${idx+1}</strong>
+          <span class="small">${ticket.map(fmt).join("-")}</span>
+        </div>
+        <div class="balls">${ticket.map(n=>`<div class="ball">${fmt(n)}</div>`).join("")}</div>
+      </div>
+    `;
+  });
+
+  html += `<button class="btn-orange" onclick="entrenarConResultadosReales()">Entrenar otra vez con resultados reales</button>`;
+
+  document.getElementById("output").innerHTML = html;
+}
+
+function borrarAprendizaje(){
+  if(!confirm("¿Seguro que deseas borrar solo el aprendizaje del sistema?")) return;
+  localStorage.removeItem(KEY_APRENDIZAJE);
+  document.getElementById("output").innerHTML = `<h2>🧠 Aprendizaje borrado</h2><p class="small">La base local se conserva, pero los pesos aprendidos fueron reiniciados.</p>`;
+}
+
+
+function guardarBaseLocal(){
+  const texto = document.getElementById("baseInput").value.trim();
+  if(!texto){
+    alert("Pega al menos un sorteo.");
+    return;
+  }
+
+  const lineas = texto.split(/\n+/);
+  const base = obtenerBaseLocal();
+  const existentes = new Set(base.map(s=>s.join("-")));
+  let agregados = 0;
+  let invalidos = 0;
+  let duplicados = 0;
+
+  lineas.forEach(linea=>{
+    const nums = limpiarEntrada(linea);
+    if(!validarSorteo5(nums)){
+      invalidos++;
+      return;
+    }
+    const clave = nums.join("-");
+    if(existentes.has(clave)){
+      duplicados++;
+      return;
+    }
+    base.push(nums);
+    existentes.add(clave);
+    agregados++;
+  });
+
+  guardarBase(base);
+  document.getElementById("baseInput").value = "";
+
+  document.getElementById("output").innerHTML = `
+    <h2>💾 Base local actualizada</h2>
+    <div class="stats">
+      <div class="stat"><span>Agregados</span><strong>${agregados}</strong></div>
+      <div class="stat"><span>Duplicados</span><strong>${duplicados}</strong></div>
+      <div class="stat"><span>Inválidos</span><strong>${invalidos}</strong></div>
+      <div class="stat"><span>Total base</span><strong>${base.length}</strong></div>
+    </div>
+  `;
+}
+
+function verBaseLocal(){
+  const base = obtenerBaseLocal();
+  if(!base.length){
+    document.getElementById("output").innerHTML = `<h2>📊 Base local</h2><p class="small">No hay sorteos guardados todavía.</p>`;
+    return;
+  }
+
+  const analisis = analizarPool(base);
+  let html = `
+    <h2>📊 Base local Lotopool</h2>
+    <div class="stats">
+      <div class="stat"><span>Sorteos guardados</span><strong>${base.length}</strong></div>
+      <div class="stat"><span>Núcleo detectado</span><strong>${analisis.rankingNumeros.slice(0,5).map(x=>fmt(x.num)).join(" ")}</strong></div>
+    </div>
+    ${renderAnalisis(analisis)}
+    <h3>Últimos sorteos guardados</h3>
+  `;
+
+  base.slice(-20).reverse().forEach((s,i)=>{
+    html += `<div class="ticket"><strong>#${base.length-i}</strong><div class="balls">${s.map(n=>`<div class="ball">${fmt(n)}</div>`).join("")}</div></div>`;
+  });
+
+  document.getElementById("output").innerHTML = html;
+}
+
+function borrarBaseLocal(){
+  if(!confirm("¿Seguro que deseas borrar la base local de Lotopool?")) return;
+  localStorage.removeItem(KEY_BASE);
+  localStorage.removeItem(KEY_NUCLEO);
+  document.getElementById("output").innerHTML = `<h2>🗑️ Base borrada</h2><p class="small">La base local fue eliminada.</p>`;
+}
+
+function renderAnalisis(analisis){
+  const topNums = analisis.rankingNumeros.slice(0,10);
+  const topPares = analisis.rankingPares.slice(0,10);
+
+  return `
+    <div class="stats">
+      <div class="stat"><span>Top #1</span><strong>${fmt(topNums[0]?.num || 0)}</strong></div>
+      <div class="stat"><span>Top #2</span><strong>${fmt(topNums[1]?.num || 0)}</strong></div>
+      <div class="stat"><span>Top #3</span><strong>${fmt(topNums[2]?.num || 0)}</strong></div>
+      <div class="stat"><span>Top #4</span><strong>${fmt(topNums[3]?.num || 0)}</strong></div>
+      <div class="stat"><span>Top #5</span><strong>${fmt(topNums[4]?.num || 0)}</strong></div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>🔥 Top 10 números</h3>
+        <table><thead><tr><th>#</th><th>Número</th><th>Veces</th><th>Peso</th></tr></thead><tbody>
+          ${topNums.map((x,i)=>`<tr><td>${i+1}</td><td>${fmt(x.num)}</td><td>${x.veces}</td><td class="${x.peso>0?'good':x.peso<0?'bad':'mid'}">${x.peso || 0}</td></tr>`).join("")}
+        </tbody></table>
+      </div>
+      <div class="card">
+        <h3>⚡ Top 10 pares</h3>
+        <table><thead><tr><th>#</th><th>Par</th><th>Veces</th><th>Peso</th></tr></thead><tbody>
+          ${topPares.map((x,i)=>`<tr><td>${i+1}</td><td>${x.par.split("-").map(n=>fmt(Number(n))).join("-")}</td><td>${x.veces}</td><td class="${x.peso>0?'good':x.peso<0?'bad':'mid'}">${x.peso || 0}</td></tr>`).join("")}
+        </tbody></table>
+      </div>
+    </div>
+  `;
+}
+
+function renderTickets(titulo, tickets, analisis=null, sorteo=null, simulaciones=0, baseUsada=0){
+  let html = `<h2>${titulo}</h2>`;
+
+  html += `
+    <div class="stats">
+      <div class="stat"><span>Rango</span><strong>1-31</strong></div>
+      <div class="stat"><span>Números por ticket</span><strong>5</strong></div>
+      <div class="stat"><span>Tickets finales</span><strong>${tickets.length}</strong></div>
+      <div class="stat"><span>Base local</span><strong>${obtenerBaseLocal().length}</strong></div>
+    </div>
+  `;
+
+  if(sorteo){
+    html += `<p class="small">Último sorteo usado: <strong>${sorteo.map(fmt).join("-")}</strong></p>`;
+  }
+  if(simulaciones){
+    html += `<p class="small">Entrenamiento usado: <strong>${simulaciones.toLocaleString()}</strong> combinaciones aleatorias + <strong>${baseUsada}</strong> sorteos guardados.</p>`;
+  }
+
+  if(analisis){
+    html += renderAnalisis(analisis);
+  }
+
+  tickets.forEach((ticket,idx)=>{
+    html += `
+      <div class="ticket">
+        <div class="ticket-head">
+          <strong>Ticket #${idx+1}</strong>
+          <span class="small">${ticket.map(fmt).join("-")}</span>
+        </div>
+        <div class="balls">
+          ${ticket.map(n=>`<div class="ball">${fmt(n)}</div>`).join("")}
+        </div>
+      </div>`;
+  });
+
+  document.getElementById("output").innerHTML = html;
+}
+
+function copiarTickets(){
+  if(!ticketsGenerados.length){
+    alert("Primero genera tickets.");
+    return;
+  }
+
+  const texto = ticketsGenerados
+    .map((t,i)=>`Ticket #${i+1}: ${t.map(fmt).join("-")}`)
+    .join("\n");
+
+  navigator.clipboard.writeText(texto).then(()=>{
+    alert("Tickets copiados.");
+  }).catch(()=>{
+    alert("No se pudo copiar automáticamente.");
+  });
+}
+
+function limpiarTodo(){
+  const ultimo = document.getElementById("ultimoSorteo");
+  const base = document.getElementById("baseInput");
+  const real = document.getElementById("resultadoReal");
+  if(ultimo) ultimo.value = "";
+  if(base) base.value = "";
+  if(real) real.value = "";
+  document.getElementById("output").innerHTML = '<span class="small">Los resultados aparecerán aquí.</span>';
+}
+
+function aplicarTemaGuardado(){
+  const tema = localStorage.getItem("lotopoolTema") || "dark";
+  const btn = document.getElementById("themeToggle");
+
+  if(tema === "light"){
+    document.body.classList.add("light-mode");
+    if(btn) btn.textContent = "🌙 Modo oscuro";
+  }else{
+    document.body.classList.remove("light-mode");
+    if(btn) btn.textContent = "☀️ Modo claro";
+  }
+}
+
+function toggleTheme(){
+  const esClaro = document.body.classList.toggle("light-mode");
+  localStorage.setItem("lotopoolTema", esClaro ? "light" : "dark");
+
+  const btn = document.getElementById("themeToggle");
+  if(btn) btn.textContent = esClaro ? "🌙 Modo oscuro" : "☀️ Modo claro";
+}
+
+aplicarTemaGuardado();
+
+</script>
+
+</body></html>
