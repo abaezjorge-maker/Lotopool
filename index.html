@@ -431,66 +431,10 @@ body.light-mode .tombola-status{
 }
 @media (max-width:700px){.tombola-stage{grid-template-columns:1fr}.tombola-drum{width:210px;height:210px}}
 
-
-/* === Memoria de Observaciones Elite + Ayuda === */
-.observacion-panel{
-  grid-column:1/-1;
-  background:linear-gradient(135deg,#111827,#0f766e);
-  border:1px solid #2dd4bf;
-}
-body.light-mode .observacion-panel{
-  background:linear-gradient(135deg,#ffffff,#ecfeff);
-  border-color:#67e8f9;
-}
-.obs-toolbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
-.obs-item{background:#0b1220;border:1px solid #334155;border-radius:14px;padding:12px;margin:10px 0}
-body.light-mode .obs-item{background:#f8fafc;border-color:#dbe3ef;color:#111827}
-.help-float{
-  position:fixed;
-  right:16px;
-  bottom:16px;
-  z-index:9998;
-  width:auto;
-  padding:12px 16px;
-  border-radius:999px;
-  background:#16a34a;
-  color:#fff;
-  box-shadow:0 8px 24px rgba(0,0,0,.28);
-}
-.help-modal{
-  position:fixed;
-  inset:0;
-  z-index:10000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  background:rgba(2,6,23,.72);
-}
-.help-modal.show{display:flex}
-.help-box{
-  width:min(720px,100%);
-  max-height:86vh;
-  overflow:auto;
-  background:#0f172a;
-  color:#e5e7eb;
-  border:1px solid #38bdf8;
-  border-radius:22px;
-  padding:20px;
-  box-shadow:0 18px 50px rgba(0,0,0,.45);
-}
-body.light-mode .help-box{background:#ffffff;color:#111827;border-color:#bae6fd}
-.help-box li{margin:8px 0;line-height:1.42}
-.help-box code{background:#020617;color:#bfdbfe;padding:2px 6px;border-radius:8px}
-body.light-mode .help-box code{background:#f1f5f9;color:#1e40af}
-.close-help{background:#dc2626;margin-top:14px}
-@media (max-width:640px){.help-float{position:sticky;bottom:auto;right:auto;width:100%;margin-top:10px}.help-box{padding:15px}}
-
   </style>
 </head>
 <body>
 <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">☀️ Modo claro</button>
-<button class="help-float" onclick="abrirAyudaLotopool()">❓ Ayuda / Cómo funciona</button>
   <main class="app">
     <h1>🧬 Lotopool — Núcleo Activo AutoTrainer</h1>
     <p>Sistema limpio adaptado a <strong>5 números del 1 al 31</strong>. Entrena miles de combinaciones, detecta números fuertes, guarda base local y genera <strong>100 tickets finales</strong> y aprende solo con resultados reales.</p>
@@ -545,19 +489,6 @@ body.light-mode .help-box code{background:#f1f5f9;color:#1e40af}
         <button class="btn-green" onclick="leerResultadoYAprender()">Leer resultado y aprender</button>
       </section>
 
-
-
-      <section class="card observacion-panel">
-        <h2>🧠 Memoria de Observaciones Elite</h2>
-        <p class="small">Escribe lo que tú notaste aunque el sistema no lo detecte exacto. Ejemplo: “Hoy dio 24 y salió 25”, “dio 16 y salió 61 invertido”, “dos números salieron por familia”. El motor convertirá esa observación en pesos para próximos tickets.</p>
-        <textarea id="observacionManual" placeholder="Ejemplo: Hoy el software dio 16 y salió 17 cerca. También dio 24 y salió 42 invertido. Vi fuerte la familia 21-22-23."></textarea>
-        <div class="obs-toolbar">
-          <button class="btn-green" onclick="guardarObservacionManual()">📌 Guardar observación</button>
-          <button class="btn-purple" onclick="verObservacionesManual()">📚 Ver observaciones</button>
-          <button class="btn-blue" onclick="aplicarObservacionesAlMotor()">⚡ Reforzar motor</button>
-          <button class="btn-red" onclick="borrarObservacionesManual()">🗑️ Borrar observaciones</button>
-        </div>
-      </section>
       <section class="card trainer-mega">
         <h2>🧠 Entrenamiento con resultados reales</h2>
         <p class="small">Prueba masiva usando solamente la base real guardada. Genera de 1M a 10M combinaciones, las compara contra sorteos reales y guarda el Top histórico.</p>
@@ -594,25 +525,6 @@ body.light-mode .help-box code{background:#f1f5f9;color:#1e40af}
     </section>
   </main>
 
-<div id="helpModal" class="help-modal" onclick="cerrarAyudaSiFondo(event)">
-  <div class="help-box">
-    <h2>📖 ¿Cómo funciona LotePro?</h2>
-    <ol>
-      <li>Selecciona o pega tus sorteos reales en <strong>Base múltiple</strong> o en <strong>Base local</strong>.</li>
-      <li>Presiona <strong>Generar 100 Tickets con Base Pegada</strong> para crear tickets con el núcleo maestro, la base real y el aprendizaje guardado.</li>
-      <li>Usa <strong>Tómbola física Lotopool — prueba 5 segundos</strong> para simular bolos 1-31, peso 2.3g a 3.0g y tolerancia ±0.075g.</li>
-      <li>Cuando salga el resultado real, pégalo en <strong>Leer resultado real</strong>. El sistema compara aciertos y aprende.</li>
-      <li>La regla principal es: <strong>3/5 o más = ticket bueno</strong>. 4/5 recibe más fuerza y 5/5 queda como élite.</li>
-      <li>En <strong>Memoria de Observaciones Elite</strong> escribe tus notas manuales: cercanos, inversos, familias, saltos o patrones que viste.</li>
-      <li>Presiona <strong>Reforzar motor</strong> para que esas observaciones aumenten el peso de los números detectados.</li>
-      <li>Después de varias lecturas, usa <strong>Ver mejores 10 tickets</strong> para ver el ranking acumulado.</li>
-    </ol>
-    <div class="warn">⚠️ LotePro es una herramienta estadística. No garantiza premios ni resultados exactos.</div>
-    <button class="close-help" onclick="cerrarAyudaLotopool()">Cerrar ayuda</button>
-  </div>
-</div>
-
-
 <script>
 const MIN_NUM = 1;
 const MAX_NUM = 31;
@@ -624,7 +536,6 @@ const KEY_TICKETS = "lotopoolTicketsGenerados";
 const KEY_NUCLEO = "lotopoolNucleoDetectado";
 const KEY_APRENDIZAJE = "lotopoolAprendizaje";
 const KEY_MEJORES_TICKETS = "lotopoolMejoresTickets3Plus";
-const KEY_OBSERVACIONES = "lotopoolObservacionesElite";
 
 const memoriaFallback = {};
 
@@ -1590,123 +1501,6 @@ function toggleTheme(){
 
   const btn = document.getElementById("themeToggle");
   if(btn) btn.textContent = esClaro ? "🌙 Modo oscuro" : "☀️ Modo claro";
-}
-
-
-/* === Memoria de Observaciones Elite === */
-function obtenerObservacionesManual(){
-  return parseJSONSeguro(storageGet(KEY_OBSERVACIONES, "[]"), []);
-}
-
-function guardarObservacionesManual(lista){
-  storageSet(KEY_OBSERVACIONES, JSON.stringify(lista.slice(-300)));
-}
-
-function detectarNumerosEnTexto(texto){
-  return [...new Set((texto.match(/\d{1,2}/g) || [])
-    .map(Number)
-    .filter(n => n >= MIN_NUM && n <= MAX_NUM))].sort((a,b)=>a-b);
-}
-
-function scoreObservacionPorTexto(texto){
-  const t = texto.toLowerCase();
-  let score = 4;
-  if(/invers|espejo|revers/.test(t)) score += 5;
-  if(/cerca|pegad|al lado|familia|salto/.test(t)) score += 3;
-  if(/salio|salió|acert|dio|mediosalieron|me dio/.test(t)) score += 3;
-  if(/fuerte|caliente|repet/.test(t)) score += 2;
-  return score;
-}
-
-function guardarObservacionManual(){
-  const campo = document.getElementById("observacionManual");
-  const texto = campo ? campo.value.trim() : "";
-  if(!texto){ alert("Escribe una observación primero."); return; }
-
-  const numeros = detectarNumerosEnTexto(texto);
-  const lista = obtenerObservacionesManual();
-  lista.push({
-    fecha:new Date().toLocaleString(),
-    texto,
-    numeros,
-    score:scoreObservacionPorTexto(texto)
-  });
-  guardarObservacionesManual(lista);
-  if(campo) campo.value = "";
-  aplicarObservacionesAlMotor(false);
-  document.getElementById("output").innerHTML = `
-    <h2>🧠 Observación guardada</h2>
-    <p class="small">El sistema detectó estos números en tu nota: <strong>${numeros.length ? numeros.map(fmt).join("-") : "ninguno"}</strong></p>
-    <div class="warn">La observación fue enviada a la memoria local y reforzada en el aprendizaje del motor.</div>
-  `;
-}
-
-function aplicarObservacionesAlMotor(mostrar=true){
-  const lista = obtenerObservacionesManual();
-  const aprendizaje = obtenerAprendizaje();
-  let refuerzos = 0;
-
-  lista.slice(-80).forEach(obs=>{
-    const nums = obs.numeros && obs.numeros.length ? obs.numeros : detectarNumerosEnTexto(obs.texto || "");
-    const score = obs.score || scoreObservacionPorTexto(obs.texto || "");
-    nums.forEach(n=>{
-      aprendizaje.numeros[n] = (aprendizaje.numeros[n] || 0) + score;
-      derivados(n).forEach(d=>{
-        if(d !== n) aprendizaje.numeros[d] = (aprendizaje.numeros[d] || 0) + Math.max(1, Math.round(score * 0.35));
-      });
-      refuerzos++;
-    });
-    for(let i=0;i<nums.length;i++){
-      for(let j=i+1;j<nums.length;j++){
-        const par = clavePar(nums[i], nums[j]);
-        aprendizaje.pares[par] = (aprendizaje.pares[par] || 0) + Math.max(2, Math.round(score * 0.75));
-      }
-    }
-  });
-
-  guardarAprendizaje(aprendizaje);
-  if(mostrar){
-    document.getElementById("output").innerHTML = `
-      <h2>⚡ Observaciones reforzadas</h2>
-      <div class="stats">
-        <div class="stat"><span>Observaciones</span><strong>${lista.length}</strong></div>
-        <div class="stat"><span>Refuerzos</span><strong>${refuerzos}</strong></div>
-        <div class="stat"><span>Regla</span><strong>Manual</strong></div>
-      </div>
-      <p class="small">Ahora genera tickets otra vez para que el motor use estos nuevos pesos.</p>
-    `;
-  }
-}
-
-function verObservacionesManual(){
-  const lista = obtenerObservacionesManual().slice().reverse();
-  if(!lista.length){
-    document.getElementById("output").innerHTML = `<h2>📚 Observaciones</h2><p class="small">Todavía no hay observaciones guardadas.</p>`;
-    return;
-  }
-  let html = `<h2>📚 Memoria de observaciones</h2><div class="stats"><div class="stat"><span>Total</span><strong>${lista.length}</strong></div><div class="stat"><span>Usadas por motor</span><strong>Sí</strong></div></div>`;
-  lista.slice(0,50).forEach((obs,idx)=>{
-    html += `<div class="obs-item"><strong>#${lista.length-idx} — ${obs.fecha}</strong><p class="small">${(obs.texto || "").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</p><p class="small">Números detectados: <strong>${(obs.numeros || []).map(fmt).join("-") || "-"}</strong> • Peso: ${obs.score || 0}</p></div>`;
-  });
-  document.getElementById("output").innerHTML = html;
-}
-
-function borrarObservacionesManual(){
-  if(!confirm("¿Seguro que deseas borrar la memoria de observaciones manuales?")) return;
-  storageRemove(KEY_OBSERVACIONES);
-  document.getElementById("output").innerHTML = `<h2>🗑️ Observaciones borradas</h2><p class="small">La memoria manual fue eliminada.</p>`;
-}
-
-function abrirAyudaLotopool(){
-  const modal = document.getElementById("helpModal");
-  if(modal) modal.classList.add("show");
-}
-function cerrarAyudaLotopool(){
-  const modal = document.getElementById("helpModal");
-  if(modal) modal.classList.remove("show");
-}
-function cerrarAyudaSiFondo(e){
-  if(e.target && e.target.id === "helpModal") cerrarAyudaLotopool();
 }
 
 
