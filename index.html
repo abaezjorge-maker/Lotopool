@@ -321,6 +321,116 @@ html,body{
   .ball{width:34px;height:34px}
 }
 
+  
+
+/* === Tómbola física Lotopool 5 segundos === */
+.tombola-panel{
+  grid-column:1/-1;
+  background:linear-gradient(135deg,#0b1220,#172554);
+  border:1px solid #3b82f6;
+}
+body.light-mode .tombola-panel{
+  background:linear-gradient(135deg,#ffffff,#eff6ff);
+  border-color:#bfdbfe;
+}
+.tombola-stage{
+  display:grid;
+  grid-template-columns:minmax(240px,1fr) minmax(240px,1fr);
+  gap:14px;
+  align-items:stretch;
+  margin-top:12px;
+}
+.tombola-machine{
+  min-height:280px;
+  border-radius:22px;
+  border:1px solid #334155;
+  background:radial-gradient(circle at center,#1e293b 0%,#0f172a 58%,#020617 100%);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+body.light-mode .tombola-machine{
+  background:radial-gradient(circle at center,#dbeafe 0%,#eff6ff 58%,#ffffff 100%);
+  border-color:#dbe3ef;
+}
+.tombola-drum{
+  width:230px;
+  height:230px;
+  border-radius:50%;
+  border:8px solid rgba(147,197,253,.45);
+  position:relative;
+  box-shadow:inset 0 0 35px rgba(59,130,246,.25),0 0 30px rgba(59,130,246,.18);
+}
+.tombola-drum.spinning{
+  animation:tombolaSpin .55s linear infinite;
+}
+@keyframes tombolaSpin{to{transform:rotate(360deg)}}
+.mini-bolo{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:#f8fafc;
+  color:#0f172a;
+  border:1px solid #93c5fd;
+  position:absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:bold;
+  font-family:monospace;
+}
+.tombola-status{
+  background:#0b1220;
+  border:1px solid #334155;
+  border-radius:18px;
+  padding:14px;
+  min-height:280px;
+}
+body.light-mode .tombola-status{
+  background:#f8fafc;
+  border-color:#dbe3ef;
+  color:#111827;
+}
+.bolo-result-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:10px 0;
+}
+.bolo-fall{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  background:#fef3c7;
+  color:#78350f;
+  border:2px solid #f59e0b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:monospace;
+  font-weight:900;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+  animation:dropBolo .28s ease-out;
+}
+@keyframes dropBolo{from{transform:translateY(-22px) scale(.75);opacity:.2}to{transform:translateY(0) scale(1);opacity:1}}
+.verify-line{
+  padding:7px 0;
+  border-bottom:1px solid rgba(148,163,184,.25);
+  font-size:13px;
+}
+.verify-line.ok{color:#86efac}
+.verify-line.bad{color:#fca5a5}
+.tombola-controls{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:10px;
+  margin-top:10px;
+}
+@media (max-width:700px){.tombola-stage{grid-template-columns:1fr}.tombola-drum{width:210px;height:210px}}
+
   </style>
 </head>
 <body>
@@ -335,6 +445,33 @@ html,body{
     </div>
 
     <div class="grid">
+
+<section class="card tombola-panel">
+  <h2>🎰 Tómbola física Lotopool — prueba 5 segundos</h2>
+  <p class="small">Campo extra para simular la verificación física: bolos del <strong>1 al 31</strong>, peso permitido <strong>2.3g a 3.0g</strong>, tolerancia <strong>±0.075g</strong>. Primero verifica si está lista, luego gira 5 segundos y deja caer 5 bolos uno detrás del otro.</p>
+  <div class="tombola-stage">
+    <div class="tombola-machine">
+      <div id="lotopoolDrum" class="tombola-drum"></div>
+    </div>
+    <div class="tombola-status">
+      <h3>Estado de prueba</h3>
+      <div class="stats">
+        <div class="stat"><span>Rango</span><strong>1-31</strong></div>
+        <div class="stat"><span>Giro</span><strong>5s</strong></div>
+        <div class="stat"><span>Peso</span><strong>2.3-3.0g</strong></div>
+        <div class="stat"><span>Tolerancia</span><strong>±0.075g</strong></div>
+      </div>
+      <div id="tombolaEstado" class="small">Presiona iniciar para verificar los bolos.</div>
+      <div id="tombolaResultado" class="bolo-result-row"></div>
+      <div class="tombola-controls">
+        <button class="btn-orange" onclick="iniciarTombolaLotopool5s()">🎰 Verificar y sortear</button>
+        <button class="btn-green" onclick="copiarResultadoTombolaLotopool()">📋 Copiar sorteo</button>
+        <button class="btn-blue" onclick="usarResultadoTombolaEnComparador()">🎯 Usar en resultado real</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <section class="card hero-hibrido">
   <h2>📚 Generador Lotopool 5/31 — Base múltiple</h2>
@@ -1535,6 +1672,144 @@ function copiarTopMegaEntrenamiento(){
   const texto = lista.slice(0,100).map((x,i)=>`Top #${i+1}: ${x.ticket.map(fmt).join("-")} | Score ${Math.round(x.score)} | Max ${x.maxHit}/5 | 4/5 ${x.h4} | 5/5 ${x.h5}`).join("\n");
   copiarTextoSeguro(texto, "Top entrenamiento copiado.");
 }
+
+
+
+/* === Tómbola Lotopool 5 segundos con peso y tolerancia === */
+let ultimoResultadoTombolaLotopool = [];
+let tombolaLotopoolActiva = false;
+const PESO_MIN_BOLO = 2.3;
+const PESO_MAX_BOLO = 3.0;
+const TOLERANCIA_BOLO = 0.075;
+const PESO_MIN_ACEPTADO = PESO_MIN_BOLO - TOLERANCIA_BOLO;
+const PESO_MAX_ACEPTADO = PESO_MAX_BOLO + TOLERANCIA_BOLO;
+
+function crearBolosVisualesLotopool(){
+  const drum = document.getElementById("lotopoolDrum");
+  if(!drum) return;
+  drum.innerHTML = "";
+  for(let n=1;n<=31;n++){
+    const b = document.createElement("div");
+    b.className = "mini-bolo";
+    b.textContent = fmt(n);
+    const ang = (n / 31) * Math.PI * 2;
+    const radio = 82 + ((n % 4) * 8);
+    const x = 101 + Math.cos(ang) * radio;
+    const y = 101 + Math.sin(ang) * radio;
+    b.style.left = x + "px";
+    b.style.top = y + "px";
+    drum.appendChild(b);
+  }
+}
+
+function pesoAleatorioBolo(){
+  // Mantiene la mayoría dentro de rango, con pequeñas variaciones realistas.
+  const peso = 2.30 + Math.random() * 0.70;
+  return Number(peso.toFixed(3));
+}
+
+function verificarBolosLotopool(){
+  const revisados = [];
+  let listo = true;
+  for(let n=1;n<=31;n++){
+    const peso = pesoAleatorioBolo();
+    const ok = peso >= PESO_MIN_ACEPTADO && peso <= PESO_MAX_ACEPTADO;
+    if(!ok) listo = false;
+    revisados.push({numero:n, peso, ok});
+  }
+  return {listo, revisados};
+}
+
+function elegirResultadoTombolaLotopool(){
+  const nums = [];
+  while(nums.length < CANTIDAD_NUMEROS){
+    const n = Math.floor(Math.random() * MAX_NUM) + MIN_NUM;
+    if(!nums.includes(n)) nums.push(n);
+  }
+  return nums.sort((a,b)=>a-b);
+}
+
+function iniciarTombolaLotopool5s(){
+  if(tombolaLotopoolActiva){
+    alert("La tómbola ya está corriendo. Espera a que termine.");
+    return;
+  }
+  crearBolosVisualesLotopool();
+  const drum = document.getElementById("lotopoolDrum");
+  const estado = document.getElementById("tombolaEstado");
+  const resultadoBox = document.getElementById("tombolaResultado");
+  if(!drum || !estado || !resultadoBox) return;
+
+  tombolaLotopoolActiva = true;
+  ultimoResultadoTombolaLotopool = [];
+  resultadoBox.innerHTML = "";
+
+  const verificacion = verificarBolosLotopool();
+  const muestra = verificacion.revisados.slice(0,10).map(x=>
+    `<div class="verify-line ${x.ok ? 'ok':'bad'}">Bolo ${fmt(x.numero)} — ${x.peso}g — ${x.ok ? 'OK':'FUERA DE TOLERANCIA'}</div>`
+  ).join("");
+
+  estado.innerHTML = `
+    <strong>Verificación física:</strong><br>
+    Peso oficial: 2.3g a 3.0g • Tolerancia aceptada: ±0.075g<br>
+    Rango aceptado real: ${PESO_MIN_ACEPTADO.toFixed(3)}g a ${PESO_MAX_ACEPTADO.toFixed(3)}g<br><br>
+    ${muestra}
+    <div class="small">Se verificaron 31 bolos. Estado: <strong>${verificacion.listo ? 'LISTO PARA SORTEO' : 'REVISAR BOLOS'}</strong></div>
+  `;
+
+  if(!verificacion.listo){
+    tombolaLotopoolActiva = false;
+    return;
+  }
+
+  setTimeout(()=>{
+    drum.classList.add("spinning");
+    estado.innerHTML += `<div class="warn">Tómbola girando automáticamente por <strong>5 segundos</strong>...</div>`;
+  }, 600);
+
+  setTimeout(()=>{
+    drum.classList.remove("spinning");
+    const resultado = elegirResultadoTombolaLotopool();
+    ultimoResultadoTombolaLotopool = resultado;
+    estado.innerHTML = `<strong>Giro completado.</strong><br><span class="small">Después del segundo 5, los bolos caen uno detrás del otro.</span>`;
+    resultadoBox.innerHTML = "";
+
+    resultado.forEach((n,idx)=>{
+      setTimeout(()=>{
+        const div = document.createElement("div");
+        div.className = "bolo-fall";
+        div.textContent = fmt(n);
+        resultadoBox.appendChild(div);
+        if(idx === resultado.length - 1){
+          estado.innerHTML += `<div class="warn">Sorteo de prueba efectuado: <strong>${resultado.map(fmt).join("-")}</strong>. La tómbola está lista.</div>`;
+          tombolaLotopoolActiva = false;
+        }
+      }, idx * 650);
+    });
+  }, 5600);
+}
+
+function copiarResultadoTombolaLotopool(){
+  if(!ultimoResultadoTombolaLotopool.length){
+    alert("Primero realiza un sorteo de prueba.");
+    return;
+  }
+  copiarTextoSeguro(ultimoResultadoTombolaLotopool.map(fmt).join("-"), "Sorteo de tómbola copiado.");
+}
+
+function usarResultadoTombolaEnComparador(){
+  if(!ultimoResultadoTombolaLotopool.length){
+    alert("Primero realiza un sorteo de prueba.");
+    return;
+  }
+  const real = document.getElementById("resultadoReal");
+  if(real){
+    real.value = ultimoResultadoTombolaLotopool.map(fmt).join("-");
+    real.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+}
+
+crearBolosVisualesLotopool();
 
 
 aplicarTemaGuardado();
