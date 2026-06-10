@@ -244,6 +244,77 @@ body.light-mode .theme-toggle{
   border-color:#334155;
 }
 
+
+/* Ajustes fuertes para celulares */
+html,body{
+  max-width:100%;
+  overflow-x:hidden;
+}
+.output,.card,.ticket{
+  overflow-wrap:anywhere;
+}
+.output{
+  overflow-x:auto;
+}
+
+@media (max-width: 640px){
+  body{
+    display:block;
+    padding:10px;
+  }
+  .app{
+    width:100%;
+    padding:14px;
+    border-radius:18px;
+  }
+  h1{font-size:24px;line-height:1.15}
+  h2{font-size:20px}
+  h3{font-size:17px}
+  p{font-size:14px}
+  .grid{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+  .top-actions{
+    grid-template-columns:1fr;
+  }
+  .stats{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  textarea,input,select{
+    font-size:16px; /* evita zoom automático en iPhone */
+  }
+  button{
+    min-height:48px;
+    font-size:15px;
+  }
+  .theme-toggle{
+    position:sticky;
+    top:8px;
+    right:auto;
+    display:block;
+    width:100%;
+    margin:0 0 10px;
+    z-index:10;
+  }
+  .ticket-head{
+    align-items:flex-start;
+  }
+  .ball{
+    width:36px;
+    height:36px;
+    font-size:14px;
+  }
+  table{
+    min-width:360px;
+  }
+}
+
+@media (max-width: 380px){
+  .stats{grid-template-columns:1fr}
+  .ball{width:34px;height:34px}
+}
+
   </style>
 </head>
 <body>
@@ -317,22 +388,57 @@ const KEY_NUCLEO = "lotopoolNucleoDetectado";
 const KEY_APRENDIZAJE = "lotopoolAprendizaje";
 const KEY_MEJORES_TICKETS = "lotopoolMejoresTickets3Plus";
 
-let ticketsGenerados = JSON.parse(localStorage.getItem(KEY_TICKETS) || "[]");
-let nucleoDetectado = JSON.parse(localStorage.getItem(KEY_NUCLEO) || JSON.stringify(NUCLEO_MAESTRO));
+const memoriaFallback = {};
+
+function storageGet(key, fallback="[]"){
+  try{
+    const value = localStorage.getItem(key);
+    return value === null ? fallback : value;
+  }catch(e){
+    return Object.prototype.hasOwnProperty.call(memoriaFallback, key) ? memoriaFallback[key] : fallback;
+  }
+}
+
+function storageSet(key, value){
+  try{
+    localStorage.setItem(key, value);
+  }catch(e){
+    memoriaFallback[key] = value;
+  }
+}
+
+function storageRemove(key){
+  try{
+    localStorage.removeItem(key);
+  }catch(e){
+    delete memoriaFallback[key];
+  }
+}
+
+function parseJSONSeguro(texto, fallback){
+  try{
+    return JSON.parse(texto);
+  }catch(e){
+    return fallback;
+  }
+}
+
+let ticketsGenerados = parseJSONSeguro(storageGet(KEY_TICKETS, "[]"), []);
+let nucleoDetectado = parseJSONSeguro(storageGet(KEY_NUCLEO, JSON.stringify(NUCLEO_MAESTRO)), NUCLEO_MAESTRO);
 
 function fmt(n){ return n < 10 ? "0" + n : "" + n; }
 
 function obtenerBaseLocal(){
-  return JSON.parse(localStorage.getItem(KEY_BASE) || "[]");
+  return parseJSONSeguro(storageGet(KEY_BASE, "[]"), []);
 }
 
 function guardarBase(base){
-  localStorage.setItem(KEY_BASE, JSON.stringify(base));
+  storageSet(KEY_BASE, JSON.stringify(base));
 }
 
 function obtenerAprendizaje(){
   const inicial = {numeros:{}, pares:{}, historial:[]};
-  const data = JSON.parse(localStorage.getItem(KEY_APRENDIZAJE) || JSON.stringify(inicial));
+  const data = parseJSONSeguro(storageGet(KEY_APRENDIZAJE, JSON.stringify(inicial)), inicial);
   if(!data.numeros) data.numeros = {};
   if(!data.pares) data.pares = {};
   if(!data.historial) data.historial = [];
@@ -343,16 +449,16 @@ function obtenerAprendizaje(){
 }
 
 function guardarAprendizaje(data){
-  localStorage.setItem(KEY_APRENDIZAJE, JSON.stringify(data));
+  storageSet(KEY_APRENDIZAJE, JSON.stringify(data));
 }
 
 
 function obtenerMejoresTickets(){
-  return JSON.parse(localStorage.getItem(KEY_MEJORES_TICKETS) || "[]");
+  return parseJSONSeguro(storageGet(KEY_MEJORES_TICKETS, "[]"), []);
 }
 
 function guardarMejoresTickets(lista){
-  localStorage.setItem(KEY_MEJORES_TICKETS, JSON.stringify(lista));
+  storageSet(KEY_MEJORES_TICKETS, JSON.stringify(lista));
 }
 
 function actualizarMejoresTickets(ticket, resultado, hits){
@@ -444,16 +550,12 @@ function copiarMejores10Tickets(){
   }
 
   const texto = lista.map((item,i)=>`Top #${i+1}: ${item.ticket.map(fmt).join("-")} | Score ${item.score} | Mejor ${item.mejorHit}/5`).join("\n");
-  navigator.clipboard.writeText(texto).then(()=>{
-    alert("Mejores 10 tickets copiados.");
-  }).catch(()=>{
-    alert("No se pudo copiar automáticamente.");
-  });
+  copiarTextoSeguro(texto, "Mejores 10 tickets copiados.");
 }
 
 function borrarMejoresTickets(){
   if(!confirm("¿Seguro que deseas borrar el ranking de mejores tickets 3+?")) return;
-  localStorage.removeItem(KEY_MEJORES_TICKETS);
+  storageRemove(KEY_MEJORES_TICKETS);
   document.getElementById("output").innerHTML = `<h2>🏆 Ranking borrado</h2><p class="small">Se eliminaron los tickets buenos acumulados.</p>`;
 }
 
@@ -616,7 +718,7 @@ function generarTicketsInteligentes(rankingNumeros, rankingPares, semillaExtra=[
 
 function guardarTickets(tickets){
   ticketsGenerados = tickets;
-  localStorage.setItem(KEY_TICKETS, JSON.stringify(tickets));
+  storageSet(KEY_TICKETS, JSON.stringify(tickets));
 }
 
 function generarNucleoActivo(){
@@ -624,7 +726,7 @@ function generarNucleoActivo(){
   const combinaciones = baseLocal.length ? baseLocal : Array.from({length:1000}, generarCombinacionAzar);
   const analisis = analizarPool(combinaciones);
   nucleoDetectado = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
-  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+  storageSet(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
 
   const pool = [...nucleoDetectado, ...nucleoDetectado.flatMap(derivados)];
   const tickets = [];
@@ -645,7 +747,7 @@ function generarNucleoMasSorteo(){
   const combinaciones = baseLocal.length ? [...baseLocal, nums] : [nums, ...Array.from({length:1000}, generarCombinacionAzar)];
   const analisis = analizarPool(combinaciones);
   nucleoDetectado = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
-  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+  storageSet(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
 
   const tickets = generarTicketsInteligentes(analisis.rankingNumeros, analisis.rankingPares, nums);
   guardarTickets(tickets);
@@ -717,7 +819,7 @@ function generar100TicketsLotopool(){
 
   const analisis = analizarPool(combinaciones);
   nucleoDetectado = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
-  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+  storageSet(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
 
   const semilla = [
     ...NUCLEO_MAESTRO,
@@ -769,7 +871,7 @@ function generarMotorHibridoElite(){
   const analisisFinal = analizarPool(combinacionesFusion);
 
   nucleoDetectado = analisisFinal.rankingNumeros.slice(0,8).map(x=>x.num);
-  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+  storageSet(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
 
   renderMotorHibrido(tickets, parteA, parteB, analisisFinal, nums);
 }
@@ -834,7 +936,7 @@ function entrenarConResultadosReales(){
   const analisis = analizarPool(combinaciones);
 
   nucleoDetectado = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
-  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+  storageSet(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
 
   const semillaReal = [
     ...NUCLEO_MAESTRO,
@@ -969,7 +1071,7 @@ function leerResultadoYAprender(){
 
   const analisis = analizarPool(obtenerBaseLocal().length ? obtenerBaseLocal() : [resultado]);
   nucleoDetectado = analisis.rankingNumeros.slice(0,8).map(x=>x.num);
-  localStorage.setItem(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
+  storageSet(KEY_NUCLEO, JSON.stringify(nucleoDetectado));
 
   let html = `
     <h2>🎯 Resultado leído y aprendizaje aplicado</h2>
@@ -1027,7 +1129,7 @@ function leerResultadoYAprender(){
 
 function borrarAprendizaje(){
   if(!confirm("¿Seguro que deseas borrar solo el aprendizaje del sistema?")) return;
-  localStorage.removeItem(KEY_APRENDIZAJE);
+  storageRemove(KEY_APRENDIZAJE);
   document.getElementById("output").innerHTML = `<h2>🧠 Aprendizaje borrado</h2><p class="small">La base local se conserva, pero los pesos aprendidos fueron reiniciados.</p>`;
 }
 
@@ -1103,8 +1205,8 @@ function verBaseLocal(){
 
 function borrarBaseLocal(){
   if(!confirm("¿Seguro que deseas borrar la base local de Lotopool?")) return;
-  localStorage.removeItem(KEY_BASE);
-  localStorage.removeItem(KEY_NUCLEO);
+  storageRemove(KEY_BASE);
+  storageRemove(KEY_NUCLEO);
   document.getElementById("output").innerHTML = `<h2>🗑️ Base borrada</h2><p class="small">La base local fue eliminada.</p>`;
 }
 
@@ -1177,6 +1279,37 @@ function renderTickets(titulo, tickets, analisis=null, sorteo=null, simulaciones
   document.getElementById("output").innerHTML = html;
 }
 
+function copiarTextoSeguro(texto, mensajeOk="Copiado."){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(texto).then(()=>{
+      alert(mensajeOk);
+    }).catch(()=>{
+      copiarTextoFallback(texto, mensajeOk);
+    });
+  }else{
+    copiarTextoFallback(texto, mensajeOk);
+  }
+}
+
+function copiarTextoFallback(texto, mensajeOk){
+  const area = document.createElement("textarea");
+  area.value = texto;
+  area.setAttribute("readonly", "");
+  area.style.position = "fixed";
+  area.style.left = "-9999px";
+  document.body.appendChild(area);
+  area.select();
+  area.setSelectionRange(0, area.value.length);
+  try{
+    document.execCommand("copy");
+    alert(mensajeOk);
+  }catch(e){
+    alert("No se pudo copiar automático. Mantén presionado el texto y cópialo manualmente.");
+  }
+  document.body.removeChild(area);
+}
+
+
 function copiarTickets(){
   if(!ticketsGenerados.length){
     alert("Primero genera tickets.");
@@ -1187,11 +1320,7 @@ function copiarTickets(){
     .map((t,i)=>`Ticket #${i+1}: ${t.map(fmt).join("-")}`)
     .join("\n");
 
-  navigator.clipboard.writeText(texto).then(()=>{
-    alert("Tickets copiados.");
-  }).catch(()=>{
-    alert("No se pudo copiar automáticamente.");
-  });
+  copiarTextoSeguro(texto, "Tickets copiados.");
 }
 
 function limpiarTodo(){
@@ -1205,7 +1334,7 @@ function limpiarTodo(){
 }
 
 function aplicarTemaGuardado(){
-  const tema = localStorage.getItem("lotopoolTema") || "dark";
+  const tema = storageGet("lotopoolTema", "dark");
   const btn = document.getElementById("themeToggle");
 
   if(tema === "light"){
@@ -1219,7 +1348,7 @@ function aplicarTemaGuardado(){
 
 function toggleTheme(){
   const esClaro = document.body.classList.toggle("light-mode");
-  localStorage.setItem("lotopoolTema", esClaro ? "light" : "dark");
+  storageSet("lotopoolTema", esClaro ? "light" : "dark");
 
   const btn = document.getElementById("themeToggle");
   if(btn) btn.textContent = esClaro ? "🌙 Modo oscuro" : "☀️ Modo claro";
